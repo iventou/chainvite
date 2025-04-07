@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package chainvite.ticket;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "chainvite/ticket/params.proto";
+import "chainvite/ticket/ticket.proto";
+
+option go_package = "github.com/iventou/chainvite/x/ticket/types";
+
+// GenesisState defines the ticket module's genesis state.
+message GenesisState {
+  
+  // params defines all the parameters of the module.
+           Params params     = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  repeated Ticket ticketList = 2 [(gogoproto.nullable) = false] ;
+}
+

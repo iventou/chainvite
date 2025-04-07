@@ -1,0 +1,16 @@
+syntax = "proto3";
+package chainvite.ticket;
+
+option go_package = "github.com/iventou/chainvite/x/ticket/types";
+
+message Ticket {
+  string index = 1; 
+  string ticketId = 2; 
+  string eventId = 3; 
+  string ticketType = 4; 
+  bool valid = 5; 
+  string owner = 6; 
+  string metadata = 7; 
+  string creator = 8;
+}
+

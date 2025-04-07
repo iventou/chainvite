@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Ex.: mint-ticket 12345 VIP alice '{"seat": "A1"}'
+
+chainvited tx ticket mint-ticket "$1" "$2" "$(chainvited keys show $3 -a)" "$4" --from "$(chainvited keys show $3 -a)" --gas auto

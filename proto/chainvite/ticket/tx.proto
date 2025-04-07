@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package chainvite.ticket;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "chainvite/ticket/params.proto";
+import "chainvite/ticket/ticket.proto";
+
+option go_package = "github.com/iventou/chainvite/x/ticket/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams   (MsgUpdateParams  ) returns (MsgUpdateParamsResponse  );
+  rpc CreateTicket   (MsgCreateTicket  ) returns (MsgCreateTicketResponse  );
+  rpc UpdateTicket   (MsgUpdateTicket  ) returns (MsgUpdateTicketResponse  );
+  rpc DeleteTicket   (MsgDeleteTicket  ) returns (MsgDeleteTicketResponse  );
+  rpc MintTicket     (MsgMintTicket    ) returns (MsgMintTicketResponse    );
+  rpc ValidateTicket (MsgValidateTicket) returns (MsgValidateTicketResponse);
+  rpc TransferTicket (MsgTransferTicket) returns (MsgTransferTicketResponse);
+}
+// MsgUpdateParams is the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) =                          "authority";
+  option           (amino.name) = "chainvite/x/ticket/MsgUpdateParams";
+  
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the module parameters to update.
+  
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+message MsgCreateTicket {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator    = 1;
+  string index      = 2;
+  string ticketId   = 3;
+  string eventId    = 4;
+  string ticketType = 5;
+  bool   valid      = 6;
+  string owner      = 7;
+  string metadata   = 8;
+}
+
+message MsgCreateTicketResponse {}
+
+message MsgUpdateTicket {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator    = 1;
+  string index      = 2;
+  string ticketId   = 3;
+  string eventId    = 4;
+  string ticketType = 5;
+  bool   valid      = 6;
+  string owner      = 7;
+  string metadata   = 8;
+}
+
+message MsgUpdateTicketResponse {}
+
+message MsgDeleteTicket {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1;
+  string index   = 2;
+}
+
+message MsgDeleteTicketResponse {}
+
+message MsgMintTicket {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator    = 1;
+  string eventId    = 2;
+  string ticketType = 3;
+  string owner      = 4;
+  string metadata   = 5;
+}
+
+message MsgMintTicketResponse {}
+
+message MsgValidateTicket {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator  = 1;
+  string ticketId = 2;
+  string deviceId = 3;
+}
+
+message MsgValidateTicketResponse {}
+
+message MsgTransferTicket {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator  = 1;
+  string ticketId = 2;
+  string newOwner = 3;
+}
+
+message MsgTransferTicketResponse {}
+
