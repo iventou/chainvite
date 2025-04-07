@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Ex.: validate-ticket c369e813cff666d346b668174f7fdcef02b6a0d6e4324864b752ed3233e50083 device001 bob
+
+chainvited tx ticket validate-ticket "$1" "$2" --from "$(chainvited keys show $3 -a)" --gas auto

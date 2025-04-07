@@ -1,1 +1,5 @@
+#!/usr/bin/env bash
+
+# Ex.: list-ticket
+
 chainvited query ticket list-ticket --page-limit 10

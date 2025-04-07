@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Ex.: show-ticket c369e813cff666d346b668174f7fdcef02b6a0d6e4324864b752ed3233e50083
+
+chainvited query ticket show-ticket "$1"
