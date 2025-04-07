@@ -22,6 +22,11 @@ func (k msgServer) ValidateTicket(goCtx context.Context, msg *types.MsgValidateT
 		return nil, errors.Wrapf(types.ErrInvalidTicketValidity, "ticket %s is not valid", msg.TicketId)
 	}
 
+	// Verify that the message creator is the ticket owner
+	if msg.Creator != ticket.Owner {
+		return nil, errors.Wrapf(types.ErrUnauthorizedAccess, "only the ticket owner can validate this ticket")
+	}
+
 	// Update the ticket status to "used" (not valid anymore)
 	ticket.Valid = false
 	k.SetTicket(ctx, ticket)
@@ -38,4 +43,3 @@ func (k msgServer) ValidateTicket(goCtx context.Context, msg *types.MsgValidateT
 
 	return &types.MsgValidateTicketResponse{}, nil
 }
-
