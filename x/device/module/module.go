@@ -1,4 +1,4 @@
-package ticket
+package device
 
 import (
 	"context"
@@ -20,9 +20,9 @@ import (
 
 	// this line is used by starport scaffolding # 1
 
-	modulev1 "github.com/iventou/chainvite/api/chainvite/ticket/module"
-	"github.com/iventou/chainvite/x/ticket/keeper"
-	"github.com/iventou/chainvite/x/ticket/types"
+	modulev1 "github.com/iventou/chainvite/api/chainvite/device/module"
+	"github.com/iventou/chainvite/x/device/keeper"
+	"github.com/iventou/chainvite/x/device/types"
 )
 
 var (
@@ -182,13 +182,12 @@ type ModuleInputs struct {
 
 	AccountKeeper types.AccountKeeper
 	BankKeeper    types.BankKeeper
-	DeviceKeeper  types.DeviceKeeper
 }
 
 type ModuleOutputs struct {
 	depinject.Out
 
-	TicketKeeper keeper.Keeper
+	DeviceKeeper keeper.Keeper
 	Module       appmodule.AppModule
 }
 
@@ -204,8 +203,6 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.Logger,
 		authority.String(),
 		in.BankKeeper,
-		in.AccountKeeper,
-		in.DeviceKeeper,
 	)
 	m := NewAppModule(
 		in.Cdc,
@@ -214,5 +211,5 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	return ModuleOutputs{TicketKeeper: k, Module: m}
+	return ModuleOutputs{DeviceKeeper: k, Module: m}
 }

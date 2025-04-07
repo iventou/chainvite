@@ -17,11 +17,11 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/iventou/chainvite/x/ticket/keeper"
-	"github.com/iventou/chainvite/x/ticket/types"
+	"github.com/iventou/chainvite/x/device/keeper"
+	"github.com/iventou/chainvite/x/device/types"
 )
 
-func TicketKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
+func DeviceKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 	storeKey := storetypes.NewKVStoreKey(types.StoreKey)
 
 	db := dbm.NewMemDB()
@@ -38,8 +38,6 @@ func TicketKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 		runtime.NewKVStoreService(storeKey),
 		log.NewNopLogger(),
 		authority.String(),
-		nil,
-		nil,
 		nil,
 	)
 

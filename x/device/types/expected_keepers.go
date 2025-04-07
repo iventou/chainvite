@@ -23,9 +23,3 @@ type ParamSubspace interface {
 	Get(context.Context, []byte, interface{})
 	Set(context.Context, []byte, interface{})
 }
-
-// DeviceKeeper defines the expected device keeper interface
-type DeviceKeeper interface {
-	IsDeviceActive(ctx sdk.Context, deviceId string) bool
-	IsDeviceAuthorizedForEvent(ctx sdk.Context, deviceId string, eventId string) bool
-}

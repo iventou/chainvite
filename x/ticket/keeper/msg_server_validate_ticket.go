@@ -27,6 +27,18 @@ func (k msgServer) ValidateTicket(goCtx context.Context, msg *types.MsgValidateT
 		return nil, errors.Wrapf(types.ErrUnauthorizedAccess, "only the ticket owner can validate this ticket")
 	}
 
+	/*
+		// Verify that the device exists and is active
+		if !k.deviceKeeper.IsDeviceActive(ctx, msg.DeviceId) {
+			return nil, errors.Wrapf(types.ErrUnauthorizedAccess, "device %s is not active", msg.DeviceId)
+		}
+
+		// Verify that the device is authorized for this event
+		if !k.deviceKeeper.IsDeviceAuthorizedForEvent(ctx, msg.DeviceId, ticket.EventId) {
+			return nil, errors.Wrapf(types.ErrUnauthorizedAccess, "device %s is not authorized for event %s", msg.DeviceId, ticket.EventId)
+		}
+	*/
+
 	// Update the ticket status to "used" (not valid anymore)
 	ticket.Valid = false
 	k.SetTicket(ctx, ticket)

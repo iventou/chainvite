@@ -43,4 +43,3 @@ func (k msgServer) TransferTicket(goCtx context.Context, msg *types.MsgTransferT
 
 	return &types.MsgTransferTicketResponse{}, nil
 }
-

@@ -48,4 +48,3 @@ func (k msgServer) MintTicket(goCtx context.Context, msg *types.MsgMintTicket) (
 	// Need to see what fields are available in the response
 	return &types.MsgMintTicketResponse{}, nil
 }
-

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package chainvite.device;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "chainvite/device/params.proto";
+import "chainvite/device/device.proto";
+
+option go_package = "github.com/iventou/chainvite/x/device/types";
+
+// GenesisState defines the device module's genesis state.
+message GenesisState {
+  
+  // params defines all the parameters of the module.
+           Params params     = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  repeated Device deviceList = 2 [(gogoproto.nullable) = false] ;
+}
+

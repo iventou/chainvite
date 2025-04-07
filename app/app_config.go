@@ -51,7 +51,10 @@ import (
 	ibcfeetypes "github.com/cosmos/ibc-go/v8/modules/apps/29-fee/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+	devicemodulev1 "github.com/iventou/chainvite/api/chainvite/device/module"
 	ticketmodulev1 "github.com/iventou/chainvite/api/chainvite/ticket/module"
+	_ "github.com/iventou/chainvite/x/device/module" // import for side-effects
+	devicemoduletypes "github.com/iventou/chainvite/x/device/types"
 	_ "github.com/iventou/chainvite/x/ticket/module" // import for side-effects
 	ticketmoduletypes "github.com/iventou/chainvite/x/ticket/types"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -93,6 +96,7 @@ var (
 		circuittypes.ModuleName,
 		// chain modules
 		ticketmoduletypes.ModuleName,
+		devicemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -118,6 +122,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		ticketmoduletypes.ModuleName,
+		devicemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -137,6 +142,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		ticketmoduletypes.ModuleName,
+		devicemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -158,6 +164,7 @@ var (
 		{Account: ibcfeetypes.ModuleName},
 		{Account: icatypes.ModuleName},
 		{Account: ticketmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
+		{Account: devicemoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -296,6 +303,10 @@ var (
 			{
 				Name:   ticketmoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&ticketmodulev1.Module{}),
+			},
+			{
+				Name:   devicemoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&devicemodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},
