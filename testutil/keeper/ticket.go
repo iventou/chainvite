@@ -17,6 +17,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/stretchr/testify/require"
 
+	addresscodec "github.com/cosmos/cosmos-sdk/codec/address"
 	"github.com/iventou/chainvite/x/ticket/keeper"
 	"github.com/iventou/chainvite/x/ticket/types"
 )
@@ -32,11 +33,13 @@ func TicketKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 	registry := codectypes.NewInterfaceRegistry()
 	cdc := codec.NewProtoCodec(registry)
 	authority := authtypes.NewModuleAddress(govtypes.ModuleName)
+	addressCodec := addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32AccountAddrPrefix())
 
 	k := keeper.NewKeeper(
 		cdc,
 		runtime.NewKVStoreService(storeKey),
 		log.NewNopLogger(),
+		addressCodec,
 		authority.String(),
 		nil,
 		nil,

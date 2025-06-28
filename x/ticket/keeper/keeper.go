@@ -3,6 +3,7 @@ package keeper
 import (
 	"fmt"
 
+	"cosmossdk.io/core/address"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -16,6 +17,7 @@ type (
 		cdc          codec.BinaryCodec
 		storeService store.KVStoreService
 		logger       log.Logger
+		addressCodec address.Codec
 
 		// the address capable of executing a MsgUpdateParams message. Typically, this
 		// should be the x/gov module account.
@@ -31,6 +33,7 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeService store.KVStoreService,
 	logger log.Logger,
+	addressCodec address.Codec,
 	authority string,
 
 	bankKeeper types.BankKeeper,
@@ -42,6 +45,7 @@ func NewKeeper(
 	}
 
 	return Keeper{
+		addressCodec: addressCodec,
 		cdc:          cdc,
 		storeService: storeService,
 		authority:    authority,
