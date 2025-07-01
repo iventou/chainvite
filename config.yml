@@ -11,6 +11,7 @@ accounts:
       - 10000000pedro
       - 10000token
       - 100000000stake
+  - name: digo
   - name: pedro
 client:
   openapi:

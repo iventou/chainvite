@@ -2,11 +2,45 @@ package keeper
 
 import (
 	"context"
+	gerrors "errors"
 
 	"cosmossdk.io/errors"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/iventou/chainvite/x/ticket/types"
 )
+
+func (k msgServer) splitPayment(ctx sdk.Context, fromAddress sdk.AccAddress, addresses [][]byte, amount math.Int) error {
+	payingCoinDenom := "pedro"
+	spendableCoins := k.Keeper.bankKeeper.SpendableCoins(ctx, fromAddress)
+	fromAddressTotalAmount := sdk.NewCoin(payingCoinDenom, spendableCoins.AmountOf(payingCoinDenom))
+
+	reserveCoin := sdk.NewCoin(payingCoinDenom, math.NewInt(10))
+	totalAmount := int64(len(addresses) * 10)
+	if fromAddressTotalAmount.Amount.LT(reserveCoin.Amount.Mul(math.NewInt(totalAmount))) {
+		return errors.Wrap(types.ErrFailedTicketValidationTransfer, "insuficient funds on payment account")
+	}
+
+	var mError error
+
+	for _, addr := range addresses {
+		if err := k.Keeper.bankKeeper.SendCoins(
+			ctx,
+			fromAddress,
+			addr,
+			sdk.NewCoins(reserveCoin),
+		); err != nil {
+			gerrors.Join(err, mError)
+			return errors.Wrapf(types.ErrFailedTicketValidationTransfer, "Failed to transfer coins on ticket validation %s", err.Error())
+		}
+	}
+
+	if gerrors.Unwrap(mError) != nil {
+		return errors.Wrapf(mError, "Failed transfers")
+	}
+
+	return nil
+}
 
 func (k msgServer) ValidateTicket(goCtx context.Context, msg *types.MsgValidateTicket) (*types.MsgValidateTicketResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -36,32 +70,30 @@ func (k msgServer) ValidateTicket(goCtx context.Context, msg *types.MsgValidateT
 	// if !k.deviceKeeper.IsDeviceAuthorizedForEvent(ctx, msg.DeviceId, ticket.EventId) {
 	// 	return nil, errors.Wrapf(types.ErrUnauthorizedAccess, "device %s is not authorized for event %s", msg.DeviceId, ticket.EventId)
 	// }
+	//
 
 	// Update the ticket status to "used" (not valid anymore)
 	ticket.Valid = false
 	k.SetTicket(ctx, ticket)
 
-	payingReserveAddr, err := k.Keeper.addressCodec.StringToBytes("cosmos1dhdtjvlr672zverhsxhyztev3jr96kxt4vdz3m")
+	payingReserveAddr, err := k.Keeper.addressCodec.StringToBytes("cosmos1k9vyqkrc6z40gt3fcfplxgxtjcj4l5k355yv6d")
 	if err != nil {
-		return nil, errors.Wrap(err, "invalid address")
+		return nil, errors.Wrap(err, "invalid address for payingReserveAddr")
 	}
-	payingCoinDenom := "pedro"
-	spendableCoins := k.Keeper.bankKeeper.SpendableCoins(ctx, payingReserveAddr)
-	reserveCoin := sdk.NewCoin(payingCoinDenom, spendableCoins.AmountOf(payingCoinDenom))
-	destionationAddr, err := k.Keeper.addressCodec.StringToBytes("cosmos10xw7klsm7xfht6guxfken9f9rpsqz5hf95n0wn")
+	destionationAddr01, err := k.Keeper.addressCodec.StringToBytes("cosmos1sr3cky55tj7kx4k8ch9vpares4wpkqvtmqps9n")
 	if err != nil {
-		return nil, errors.Wrap(err, "invalid address")
-	}
-	if err := k.Keeper.bankKeeper.SendCoins(
-		ctx,
-		payingReserveAddr,
-		destionationAddr,
-		sdk.NewCoins(reserveCoin),
-	); err != nil {
-		return nil, errors.Wrapf(types.ErrFailedTicketValidationTransfer, "Failed to transfer coins on ticket validation %s", err.Error())
+		return nil, errors.Wrap(err, "invalid address for destionationAddr01")
 	}
 
-	println("Send")
+	destionationAddr02, err := k.Keeper.addressCodec.StringToBytes("cosmos18rtlpdvmjv7erkvlxfcxqm86xcr9fchwcwjfk9")
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid address for destionationAddr02")
+	}
+
+	k.splitPayment(ctx, payingReserveAddr, [][]byte{
+		destionationAddr01,
+		destionationAddr02,
+	}, math.NewInt(10))
 
 	// Emit event
 	ctx.EventManager().EmitEvents(sdk.Events{
