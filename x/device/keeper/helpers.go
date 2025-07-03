@@ -10,7 +10,7 @@ func (k Keeper) IsDeviceActive(ctx sdk.Context, deviceId string) bool {
 	return found && device.Status == "active"
 }
 
-// IsDeviceAuthorizedForEvent checks if a device is authorized for a specific event
+// sDeviceAuthorizedForEvent checks if a device is authorized for a specific event
 func (k Keeper) IsDeviceAuthorizedForEvent(ctx sdk.Context, deviceId string, eventId string) bool {
 	device, found := k.GetDevice(ctx, deviceId)
 	return found && device.EventId == eventId && device.Status == "active"
